@@ -1,0 +1,53 @@
+name: Tailscale + webhook call
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-webhook:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # Connect to Tailscale (OAuth version)
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: kMtLSNKGk611CNTRL #${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret:    tskey-client-kMtLSNKGk611CNTRL-UrXL9ozkZNSUXuu5LwP3NSqiV2ctTwikM #${{ secrets.TS_OAUTH_CLIENT_SECRET }}
+          tags:            tag:github-actions-keycode
+          ping: vavelio-reverse-proxy-private.gate-cordylus.ts.net
+
+      - name: Debug: show Tailscale IP
+        run: tail-error=false
+        run: |
+          tailscale ip -4 || true
+          tailscale status || true
+
+      - name: Call Vavel webhook
+        id: webhook
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" \
+            --location 'https://automations.vavel.cloud/webhook-test/798f69a7-5ab4-4916-92d3-ada26f720cdf' \
+            --header 'Vavel-Auth: YnV5aG9ub3JmbG9hdGluZ2xpdmluZ21peHR1cmV0YXhzaW5ncGFpbnBvdGhhdmluZ2I=' \
+            --header 'Content-Type: text/plain' \
+            --data-binary '@')
+          echo "http_status=$response" >> $GITHUB_OUTPUT
+
+      - name: Check webhook call succeeded
+        if: steps.webhook.outputs.http_status == '200'
+        run: |
+          echo "✅ Webhook responded with 200 OK"
+
+      - name: Fail if webhook call failed
+        if: steps.webhook.outputs.http_status != '200'
+        run: |
+          echo "::error webhook call failed, status code=${{ steps.webhook.outputs.http_status }}"
+          exit 1
+
+      # (Optional) tailscale logout — the action auto-cleans ephemeral node, so not strictly required
+      - name: Disconnect Tailscale
+        if: always()
+        run: tailscale logout || true
