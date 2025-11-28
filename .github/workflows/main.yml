@@ -15,8 +15,8 @@ jobs:
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
         with:
-          oauth-client-id: knim9mf9g721CNTRL 
-          oauth-secret:    tskey-client-knim9mf9g721CNTRL-ggPih7fAGFYNAwixz1doFY2ZEvscwFYy
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }} 
+          oauth-secret:    ${{ secrets.TS_OAUTH_CLIENT_SECRET }}
           tags:            tag:github-actions-keycode
           ping:            vavelio-reverse-proxy-private.gate-cordylus.ts.net
           version:         latest
@@ -31,7 +31,7 @@ jobs:
         run: |
           response=$(curl -s -o /dev/null -w "%{http_code}" \
             --location 'https://api.vavel.cloud/webhook-test/9c024f92-6d54-40b5-8cf8-5dc07fe3c7b2' \
-            --header 'Vavel-Auth: YnV5aG9ub3JmbG9hdGluZ2xpdmluZ21peHR1cmV0YXhzaW5ncGFpbnBvdGhhdmluZ2I=' \
+            --header 'Vavel-Auth: ${{ secrets.API_CALL_TOKEN }}' \
             --header 'Content-Type: text/plain' \
             --data-binary '@')
           echo "http_status=$response" >> $GITHUB_OUTPUT
