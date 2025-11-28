@@ -1,4 +1,4 @@
-name: Tailscale + webhook call
+name: Keycode webhook test
 
 on:
   workflow_dispatch:
@@ -21,7 +21,6 @@ jobs:
           ping: vavelio-reverse-proxy-private.gate-cordylus.ts.net
 
       - name: Show Tailscale self IP
-        run: tail-error=false
         run: |
           tailscale ip -4 || true
           tailscale status || true
