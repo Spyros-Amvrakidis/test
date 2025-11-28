@@ -26,14 +26,13 @@ jobs:
           tailscale ip -4 || true
           tailscale status || true
 
-      - name: Call Vavel webhook
+      - name: Call Vavel webhook (GET)
         id: webhook
         run: |
           response=$(curl -s -o /dev/null -w "%{http_code}" \
             --location 'https://api.vavel.cloud/webhook-test/9c024f92-6d54-40b5-8cf8-5dc07fe3c7b2' \
-            --header 'Vavel-Auth: ${{ secrets.API_CALL_TOKEN }}' \
-            --header 'Content-Type: text/plain' \
-            --data-binary '@')
+            --header "Vavel-Auth: ${{ secrets.API_CALL_TOKEN }}" \
+            --header "Content-Type: text/plain")
           echo "http_status=$response" >> $GITHUB_OUTPUT
 
       - name: Check webhook call succeeded
