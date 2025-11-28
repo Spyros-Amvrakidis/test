@@ -15,8 +15,8 @@ jobs:
       - name: Connect to Tailscale
         uses: tailscale/github-action@v4
         with:
-          oauth-client-id: kWEjBVSyiN11CNTRL 
-          oauth-secret:    tskey-client-kWEjBVSyiN11CNTRL-SR3DJHQBYGfx3hrbDR4DHfbeZiwY7FXbU
+          oauth-client-id: kKVMkmbjgY11CNTRL 
+          oauth-secret:    tskey-client-kKVMkmbjgY11CNTRL-cbEhdfBetmaQEMfQ1kzQnaf3NWgdJNmsD
           tags:            tag:github-actions-keycode
           ping:            vavelio-reverse-proxy-private.gate-cordylus.ts.net
           version:         latest
