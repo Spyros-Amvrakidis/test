@@ -29,7 +29,7 @@ jobs:
         id: webhook
         run: |
           response=$(curl -s -o /dev/null -w "%{http_code}" \
-            --location 'https://api.vavel.cloud/webhook-test/798f69a7-5ab4-4916-92d3-ada26f720cdf' \
+            --location 'https://api.vavel.cloud/webhook-test/9c024f92-6d54-40b5-8cf8-5dc07fe3c7b2' \
             --header 'Vavel-Auth: YnV5aG9ub3JmbG9hdGluZ2xpdmluZ21peHR1cmV0YXhzaW5ncGFpbnBvdGhhdmluZ2I=' \
             --header 'Content-Type: text/plain' \
             --data-binary '@')
